@@ -12,7 +12,7 @@ export default function AuditPage() {
           <h1 className="text-5xl font-bold tracking-tight">Website Audit</h1>
         </section>
 
-        <div className="mt-6">
+        <div className="pt-6">
           <AuditForm />
         </div>
 

@@ -81,7 +81,7 @@ export default function AuditForm() {
     <>
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6"
+        className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6 mb-6"
       >
         <label
           htmlFor="url"
@@ -120,7 +120,7 @@ export default function AuditForm() {
       {!loading && error && (
         <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-6">
           <h3 className="mb-2 text-lg font-semibold text-red-400">
-            Couldn't analyze this website
+            Couldn&apos;t analyze this website
           </h3>
 
           <p className="text-neutral-300">{error}</p>
