@@ -1,36 +1,238 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Page Pulse
 
-## Getting Started
+A lightweight website auditing service built with **Next.js 16** that analyzes public web pages for basic SEO and performance metrics.
 
-First, run the development server:
+Built for the **Digital Heroes Training Task**.
+
+---
+
+## Features
+
+- Website SEO audit
+- Performance metrics
+- URL validation
+- Redis caching
+- Rate limiting
+- Concurrency limiting
+- Structured logging
+- Health endpoint
+- Unit tests
+- GitHub Actions CI
+
+---
+
+# Tech Stack
+
+- Next.js 16
+- TypeScript
+- React 19
+- Cheerio
+- Upstash Redis
+- Pino
+- Vitest
+
+---
+
+# Getting Started
+
+## Clone
+
+```bash
+git clone <repository-url>
+cd page-pulse
+```
+
+## Install
+
+```bash
+npm install
+```
+
+## Environment Variables
+
+Create a `.env.local` file.
+
+```env
+UPSTASH_REDIS_REST_URL=your_url
+UPSTASH_REDIS_REST_TOKEN=your_token
+```
+
+## Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Application:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# API Contract
 
-To learn more about Next.js, take a look at the following resources:
+## POST `/api/audit`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Audits a public website.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Request
 
-## Deploy on Vercel
+```http
+POST /api/audit
+Content-Type: application/json
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Body
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```json
+{
+  "url": "https://example.com"
+}
+```
+
+---
+
+### Successful Response
+
+**Status:** `200 OK`
+
+```json
+{
+  "success": true,
+  "requestId": "req_abc123",
+  "timestamp": "2026-07-28T12:34:56.789Z",
+  "data": {
+    "url": "https://example.com",
+    "status": 200,
+    "cached": false,
+    "seo": {
+      "title": "Example Domain",
+      "description": "Example description",
+      "h1Count": 1
+    },
+    "performance": {
+      "responseTime": 182,
+      "htmlSize": 12564
+    }
+  }
+}
+```
+
+---
+
+### Validation Error
+
+**Status:** `400 Bad Request`
+
+```json
+{
+  "success": false,
+  "requestId": "req_xyz123",
+  "timestamp": "2026-07-28T12:35:12.102Z",
+  "error": {
+    "code": "INVALID_URL",
+    "message": "Invalid URL."
+  }
+}
+```
+
+---
+
+### Rate Limited
+
+**Status:** `429 Too Many Requests`
+
+```json
+{
+  "success": false,
+  "requestId": "req_xyz123",
+  "timestamp": "2026-07-28T12:35:12.102Z",
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Too many requests."
+  }
+}
+```
+
+---
+
+## GET `/api/health`
+
+Checks service availability.
+
+### Successful Response
+
+```json
+{
+  "status": "healthy"
+}
+```
+
+---
+
+# Running Tests
+
+```bash
+npm test
+```
+
+or
+
+```bash
+npm run test
+```
+
+---
+
+# Project Structure
+
+```
+app/
+components/
+lib/
+services/
+tests/
+types/
+utils/
+validators/
+docs/
+```
+
+---
+
+# CI/CD
+
+GitHub Actions automatically:
+
+- Installs dependencies
+- Runs tests
+- Verifies the project builds successfully
+
+---
+
+# Documentation
+
+Additional design documents are available in the `docs` directory.
+
+- Architecture Document
+- Technology Decision Record
+- Failure Mode Analysis
+- Observability & Rollback Plan
+
+---
+
+# Live Demo
+
+```
+https://digitalheroes.nakul.rest/
+```
+
+Replace the URL after deployment.
+
+---
+
+# License
+
+This project was created for the **Digital Heroes Training Task**.
