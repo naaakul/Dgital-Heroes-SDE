@@ -1,65 +1,100 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="min-h-screen bg-neutral-950 text-white">
+      <div className="mx-auto flex max-w-5xl flex-col gap-10 px-6 py-16">
+        <header className="flex gap-7">
+          <h1 className="text-5xl font-bold tracking-tight">Page Pulse</h1>
+          <Link href={"/audit"}>
+            <div className="rounded-lg border border-green-500/30 text-green-400 bg-green-500/10 px-6 py-3 font-medium transition hover:bg-green-500/20 disabled:cursor-not-allowed disabled:opacity-50">
+              Demo
+            </div>
+          </Link>
+        </header>
+
+        <section className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+          <h2 className="mb-4 text-2xl font-semibold">Features</h2>
+
+          <ul className="space-y-2 text-neutral-300">
+            <li>✅ URL validation</li>
+            <li>✅ Request timeout handling</li>
+            <li>✅ Configurable caching</li>
+            <li>✅ Rate limiting</li>
+            <li>✅ Concurrency limiting</li>
+            <li>✅ Structured error responses</li>
+            <li>✅ Request IDs & logging</li>
+            <li>✅ Unit tests with Vitest</li>
+            <li>✅ GitHub Actions CI</li>
+          </ul>
+        </section>
+
+        <section className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+          <h2 className="mb-4 text-2xl font-semibold">API Endpoints</h2>
+
+          <div className="space-y-6">
+            <div>
+              <p className="font-medium">GET /api/health</p>
+
+              <p className="mt-1 text-neutral-400">
+                Returns service health status.
+              </p>
+            </div>
+
+            <div>
+              <p className="font-medium">POST /api/audit</p>
+
+              <p className="mt-2 text-neutral-400">Request Body</p>
+
+              <pre className="mt-2 overflow-x-auto rounded-lg bg-black p-4 text-sm">
+                {`{
+  "url": "https://example.com"
+}`}
+              </pre>
+
+              <p className="mt-4 text-neutral-400">Example Response</p>
+
+              <pre className="mt-2 overflow-x-auto rounded-lg bg-black p-4 text-sm">
+                {`{
+  "success": true,
+  "requestId": "req_abc123",
+  "timestamp": "2026-07-28T12:34:56.789Z",
+  "data": {
+    "url": "https://example.com",
+    "status": 200,
+    "cached": false,
+    "seo": {
+      "title": "Example Domain",
+      "description": "...",
+      "h1Count": 1
+    },
+    "performance": {
+      "responseTime": 182,
+      "htmlSize": 12564
+    }
+  }
+}`}
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+          <h2 className="mb-4 text-2xl font-semibold">Project</h2>
+
+          <div className="space-y-2 text-neutral-300">
+            <p>Framework: Next.js 16</p>
+
+            <p>Language: TypeScript</p>
+
+            <p>Testing: Vitest</p>
+
+            <p>CI: GitHub Actions</p>
+
+            <p>Cache: Upstash Redis</p>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
