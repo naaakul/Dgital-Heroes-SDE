@@ -9,4 +9,8 @@ export const rateLimiter = new Ratelimit({
     CONFIG.RATE_LIMIT_REQUESTS,
     `${CONFIG.RATE_LIMIT_WINDOW} s`
   ),
+
+  analytics: true,
+
+  prefix: "page-pulse",
 });
