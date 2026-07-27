@@ -1,22 +1,16 @@
 import { z } from "zod";
+
 import { CONFIG } from "@/lib/constants";
 import { AppError, ErrorCode } from "@/lib/errors";
 
 const schema = z.object({
-  url: z
-    .string()
-    .trim()
-    .min(1)
-    .max(CONFIG.MAX_URL_LENGTH),
+  url: z.string().trim().min(1),
 });
 
-const PRIVATE_IP =
-  /^(localhost|127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.)/;
+export function validateAuditRequest(body: unknown): string {
+  const result = schema.safeParse(body);
 
-export function validateAuditRequest(input: unknown): string {
-  const parsed = schema.safeParse(input);
-
-  if (!parsed.success) {
+  if (!result.success) {
     throw new AppError(
       ErrorCode.INVALID_REQUEST,
       "Invalid request body.",
@@ -24,16 +18,16 @@ export function validateAuditRequest(input: unknown): string {
     );
   }
 
-  let { url } = parsed.data;
+  let { url } = result.data;
 
   if (!/^https?:\/\//i.test(url)) {
     url = `https://${url}`;
   }
 
-  let parsedUrl: URL;
+  let parsed: URL;
 
   try {
-    parsedUrl = new URL(url);
+    parsed = new URL(url);
   } catch {
     throw new AppError(
       ErrorCode.INVALID_URL,
@@ -42,7 +36,15 @@ export function validateAuditRequest(input: unknown): string {
     );
   }
 
-  if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+  if (parsed.href.length > CONFIG.MAX_URL_LENGTH) {
+    throw new AppError(
+      ErrorCode.INVALID_URL,
+      "URL is too long.",
+      400
+    );
+  }
+
+  if (!["http:", "https:"].includes(parsed.protocol)) {
     throw new AppError(
       ErrorCode.INVALID_URL,
       "Only HTTP and HTTPS URLs are allowed.",
@@ -50,7 +52,9 @@ export function validateAuditRequest(input: unknown): string {
     );
   }
 
-  if (PRIVATE_IP.test(parsedUrl.hostname)) {
+  const hostname = parsed.hostname.toLowerCase();
+
+  if (hostname === "localhost") {
     throw new AppError(
       ErrorCode.INVALID_URL,
       "Private or localhost URLs are not allowed.",
@@ -58,5 +62,26 @@ export function validateAuditRequest(input: unknown): string {
     );
   }
 
-  return parsedUrl.toString();
+  if (!hostname.includes(".")) {
+    throw new AppError(
+      ErrorCode.INVALID_URL,
+      "Invalid URL.",
+      400
+    );
+  }
+
+  if (
+    /^127\./.test(hostname) ||
+    /^10\./.test(hostname) ||
+    /^192\.168\./.test(hostname) ||
+    /^172\.(1[6-9]|2\d|3[0-1])\./.test(hostname)
+  ) {
+    throw new AppError(
+      ErrorCode.INVALID_URL,
+      "Private or localhost URLs are not allowed.",
+      400
+    );
+  }
+
+  return parsed.toString();
 }
