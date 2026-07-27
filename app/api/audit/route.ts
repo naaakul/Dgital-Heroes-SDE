@@ -1,44 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { generateRequestId } from "@/lib/request-id";
-import { logger } from "@/lib/logger";
+import { createRequestLogger } from "@/lib/request-logger";
+
 import { validateAuditRequest } from "@/validators/audit.validator";
 import { runAudit } from "@/services/audit.service";
 import { successResponse, errorResponse } from "@/services/response.service";
+
 import { AppError } from "@/lib/errors";
 
 export async function POST(request: NextRequest) {
   const requestId = generateRequestId();
+
+  const log = createRequestLogger(requestId);
 
   try {
     const body = await request.json();
 
     const url = validateAuditRequest(body);
 
-    logger.info({
-      requestId,
+    log.info({
       event: "audit_started",
       url,
     });
 
-    const audit = await runAudit(url);
+    const result = await runAudit(url);
 
-    logger.info({
-      requestId,
+    log.info({
       event: "audit_completed",
       url,
     });
 
     return NextResponse.json(
-      successResponse(requestId, audit),
+      successResponse(requestId, result),
       {
         status: 200,
       }
     );
   } catch (error) {
     if (error instanceof AppError) {
-      logger.error({
-        requestId,
+      log.error({
+        event: "audit_failed",
         code: error.code,
         message: error.message,
       });
@@ -55,8 +57,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    logger.error({
-      requestId,
+    log.error({
+      event: "internal_error",
       error,
     });
 
@@ -64,7 +66,7 @@ export async function POST(request: NextRequest) {
       errorResponse(
         requestId,
         "INTERNAL_SERVER_ERROR",
-        "Something went wrong."
+        "Internal Server Error"
       ),
       {
         status: 500,
