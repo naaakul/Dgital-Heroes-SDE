@@ -38,7 +38,7 @@ Built for the **Digital Heroes Training Task**.
 ## Clone
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/naaakul/Digital-Heroes-SDE
 cd page-pulse
 ```
 
@@ -229,10 +229,8 @@ Additional design documents are available in the `docs` directory.
 https://digitalheroes.nakul.rest/
 ```
 
-Replace the URL after deployment.
-
 ---
 
 # License
 
-This project was created for the **Digital Heroes Training Task**.
+This project was created for the **Digital Heroes Training Task** by **Nakul Chouksey**.
