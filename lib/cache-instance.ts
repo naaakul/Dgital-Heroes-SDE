@@ -1,3 +1,3 @@
-import { MemoryCache } from "./memory-cache";
+import { RedisCache } from "./redis-cache";
 
-export const cache = new MemoryCache();
+export const cache = new RedisCache();
